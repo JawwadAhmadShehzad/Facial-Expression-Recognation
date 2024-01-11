@@ -1,0 +1,42 @@
+HTML and CSS:
+
+The HTML file (index.html) is a web page that includes a form with an input field to upload an image, a button to predict emotions, and different divisions to display the image and predictions.
+CSS is used for styling, including setting a background image with blur effect, adding animations, and styling various elements.
+CSS Styling:
+
+The body style sets the background image, applies a blur effect using backdrop-filter, and uses flexbox to center the content.
+Animations (like fadeIn, bounce, slideInLeft) are defined using @keyframes to create visual effects when elements appear on the screen.
+Styles for various elements like h1, form, label, #image-preview, img, #prediction, and button are defined to enhance the overall look.
+JavaScript:
+
+Two JavaScript functions are defined:
+previewImage(): This function is triggered when an image is selected. It reads the selected image and displays a preview.
+predictEmotion(): This function is triggered when the "Predict Emotion" button is clicked. It sends the selected image to the server for prediction using a POST request.
+Flask (Python):
+
+The Flask web application serves the HTML file and handles the prediction logic.
+It loads a pre-trained Convolutional Neural Network (CNN) model for emotion recognition.
+The index() function renders the HTML page.
+The /predict route receives a POST request with an image, preprocesses the image, and uses the trained model to predict the emotion.
+The predicted emotion is sent back to the client as a JSON response.
+Convolutional Neural Network (CNN) Model:
+
+The CNN model is defined using the Keras library. It consists of convolutional layers, batch normalization, max pooling, flattening, and dense layers.
+The model is trained on the FER2013 dataset, which contains facial expressions.
+Training and Saving Model:
+
+The model is trained and saved using the my_model() function and the training data.
+If a pre-trained model exists, it is loaded; otherwise, a new model is trained and saved.
+Emotion Analysis:
+
+The emotions_list contains emotion labels ('Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral').
+The preprocess_image() function prepares the input image for the model.
+The emotion_analysis() function converts the model's output to a dictionary with emotion labels and corresponding probabilities.
+Running the Application:
+
+The if __name__ == '__main__': block runs the Flask application in debug mode.
+Client-Side Interaction:
+
+The client uploads an image, previews it, and clicks the "Predict Emotion" button.
+The JavaScript function sends the image to the server (/predict route) for prediction.
+The server responds with the predicted emotion, which is displayed on the web page.

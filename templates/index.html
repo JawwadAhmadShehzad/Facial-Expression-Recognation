@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('https://wallpaperaccess.com/full/5088893.jpg');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(10px); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            animation: fadeInBackground 3s;
+        }
+        
+
+        h1 {
+            color: #fff;
+            animation: bounce 1s infinite;
+        }
+
+        form {
+            margin-top: 20px;
+            animation: slideInLeft 1s;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            background-color: lightgray;
+            color: black;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            animation: fadeIn 1s 0.5s;
+        }
+
+        #image-preview {
+            margin-top: 20px;
+            animation: fadeIn 1s 1s;
+        }
+
+        img {
+            height: 300px;
+            width: 300px;
+            margin-top: 10px;
+            animation: fadeIn 1s 1.5s;
+        }
+
+        #prediction {
+            margin-top: 20px;
+            animation: fadeIn 1s 2s;
+        }
+
+        #prediction p {
+            color: #fff; 
+        }
+        h2{
+            color: #fff;
+        }
+
+        button {
+            background-color: green;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            animation: fadeIn 1s 2.5s;
+            border:none;
+        }
+
+        @keyframes fadeInBackground {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Face Recognition</h1>
+
+    <form id="upload-form">
+        <label for="file-upload">Choose an image</label>
+        <input type="file" id="file-upload" accept="image/*" onchange="previewImage()">
+        <button type="button" onclick="predictEmotion()">Predict Emotion</button>
+    </form>
+
+    <div id="image-preview"></div>
+
+    <div id="prediction"></div>
+
+    <script>
+        function previewImage() {
+            const preview = document.getElementById('image-preview');
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    preview.innerHTML = '';
+                    preview.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function predictEmotion() {
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const predictionDiv = document.getElementById('prediction');
+                    predictionDiv.innerHTML = '<h2>Predicted Emotions:</h2>';
+
+                    for (const emotion in data) {
+                        predictionDiv.innerHTML += `<p>${emotion}: ${data[emotion]}</p>`;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+</body>
+</html>
